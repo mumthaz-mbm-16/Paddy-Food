@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PADDYFOOD — Billing & Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paddy-green: #2d5016;
+      --paddy-light: #6b8e23;
+      --golden: #c9a227;
+      --cream: #f5f0e1;
+      --paper: #faf6eb;
+      --ink: #1a1a0a;
+      --shadow: rgba(45, 80, 22, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      color: var(--ink);
+      padding: 1rem;
+      position: relative;
+      background-color: #c5d8a8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1920') center/cover no-repeat;
+      z-index: -2;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(232,240,220,0.92) 0%, rgba(212,228,196,0.94) 50%, rgba(197,216,168,0.95) 100%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.25rem;
+      color: var(--paddy-green);
+      text-shadow: 0 2px 4px var(--shadow);
+      letter-spacing: 0.02em;
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      color: var(--paddy-light);
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.6rem 1.2rem;
+      border: 2px solid var(--paddy-green);
+      background: var(--paper);
+      color: var(--paddy-green);
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      background: var(--paddy-light);
+      color: white;
+    }
+
+    .tab.active {
+      background: var(--paddy-green);
+      color: white;
+    }
+
+    .panel {
+      display: none;
+      animation: fade 0.3s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .billing-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .billing-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .menu-card {
+      background: var(--paper);
+      border: 2px solid #e0dcc8;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .menu-card:hover {
+      border-color: var(--paddy-light);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .menu-card .img-wrap {
+      height: 90px;
+      background: #e8e4d8;
+      overflow: hidden;
+    }
+
+    .menu-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .menu-card .name {
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 0.9rem;
+      padding: 0.4rem 0.5rem 0.1rem;
+    }
+
+    .menu-card .price {
+      color: var(--paddy-green);
+      font-weight: 700;
+      padding: 0.1rem 0.5rem 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .bill-box {
+      background: var(--paper);
+      border: 2px solid #e0dcc8;
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    .bill-box h3 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--paddy-green);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .cart-items {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding-right: 0.5rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #eee8d8;
+      font-size: 0.9rem;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item .qty {
+      color: var(--paddy-light);
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .cart-empty {
+      color: #888;
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.75rem 0;
+      border-top: 2px solid var(--paddy-light);
+      margin-top: 0.5rem;
+      color: var(--paddy-green);
+    }
+
+    .payment-row { margin-top: 1rem; }
+    .payment-row label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+    .payment-row input {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 2px solid #e0dcc8;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .payment-row input:focus {
+      outline: none;
+      border-color: var(--paddy-light);
+    }
+
+    .balance-row {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #e8f0dc, #d4e4c4);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+    .balance-row.owe { color: #b8860b; }
+    .balance-row.return { color: var(--paddy-green); }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--paddy-green);
+      color: white;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .btn-primary:hover {
+      background: var(--paddy-light);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #e0dcc8;
+      color: var(--ink);
+      margin-top: 0.5rem;
+    }
+    .btn-secondary:hover { background: #d0c8b0; }
+
+    .assign-customer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0dcc8;
+    }
+    .assign-customer label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+    .assign-customer select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 2px solid #e0dcc8;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    /* ——— Notebook / Persons ——— */
+    .notebook {
+      background: var(--paper);
+      border: 2px solid #e0dcc8;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .notebook h2 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--paddy-green);
+      margin-bottom: 1rem;
+      font-size: 1.35rem;
+    }
+    .add-person-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 0.75rem;
+      align-items: end;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 600px) {
+      .add-person-form { grid-template-columns: 1fr; }
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 2px solid #e0dcc8;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--paddy-light);
+    }
+    .person-list { border-top: 2px solid #e0dcc8; padding-top: 1rem; }
+    .person-item {
+      background: #f5f0e1;
+      border: 1px solid #e0dcc8;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .person-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .person-name { font-weight: 700; color: var(--paddy-green); font-size: 1.05rem; }
+    .person-number { color: #666; font-size: 0.9rem; }
+    .person-balance { font-weight: 700; font-size: 1.1rem; color: var(--paddy-green); }
+    .person-balance.zero { color: #666; }
+    .person-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .person-actions input {
+      width: 90px;
+      padding: 0.4rem 0.5rem;
+      border: 2px solid #e0dcc8;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    .btn-add-bill { background: var(--paddy-green); color: white; }
+    .btn-pay { background: var(--golden); color: var(--ink); }
+    .btn-edit { background: #5a7c9e; color: white; }
+    .btn-delete { background: #a63d3d; color: white; }
+    .btn-edit:hover, .btn-delete:hover { opacity: 0.9; }
+    .ledger-entries {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #555;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .ledger-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid #eee8d8;
+    }
+    .ledger-entry:last-child { border-bottom: none; }
+    .no-persons {
+      text-align: center;
+      color: #888;
+      padding: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--paper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .modal h3 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--paddy-green);
+      margin-bottom: 1rem;
+    }
+    .modal .form-group { margin-bottom: 1rem; }
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .modal-actions .btn { margin-top: 0; width: auto; }
+
+    /* Monthly Sales Report */
+    .report-box {
+      background: var(--paper);
+      border: 2px solid #e0dcc8;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .report-box h2 {
+      font-family: 'DM Serif Display', serif;
+      color: var(--paddy-green);
+      margin-bottom: 1rem;
+    }
+    .report-filters {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .report-filters label { font-weight: 600; font-size: 0.9rem; }
+    .report-filters select {
+      padding: 0.5rem 0.75rem;
+      border: 2px solid #e0dcc8;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .report-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .report-card {
+      background: linear-gradient(135deg, #e8f0dc, #d4e4c4);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .report-card .label { font-size: 0.85rem; color: #555; margin-bottom: 0.25rem; }
+    .report-card .value { font-weight: 700; font-size: 1.25rem; color: var(--paddy-green); }
+    .report-table-wrap {
+      overflow-x: auto;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .report-table th,
+    .report-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e0dcc8;
+    }
+    .report-table th {
+      background: #e8e4d8;
+      font-weight: 600;
+      color: var(--paddy-green);
+      position: sticky;
+      top: 0;
+    }
+    .report-table tr:hover { background: #f5f0e1; }
+    .report-none { text-align: center; color: #888; padding: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="logo">PADDYFOOD</h1>
+      <p class="tagline">Surrounded by paddy field — Parotta & more</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-panel="billing">Billing</button>
+      <button class="tab" data-panel="notebook">Notebook — Persons</button>
+      <button class="tab" data-panel="report">Monthly Sales Report</button>
+    </div>
+
+    <div id="billing" class="panel active">
+      <div class="billing-layout">
+        <div>
+          <h3 style="font-family: 'DM Serif Display', serif; color: var(--paddy-green); margin-bottom: 0.75rem;">Menu</h3>
+          <div class="menu-grid" id="menuGrid"></div>
+        </div>
+        <div class="bill-box">
+          <h3>Bill</h3>
+          <div class="cart-items" id="cartItems"></div>
+          <div class="total-row">
+            <span>Total</span>
+            <span id="totalAmount">Rs. 0</span>
+          </div>
+          <div class="payment-row">
+            <label>Amount paid (Rs.)</label>
+            <input type="number" id="amountPaid" placeholder="0" min="0" step="1" />
+          </div>
+          <div class="balance-row" id="balanceRow">Balance: Rs. 0</div>
+          <div class="assign-customer" id="assignCustomerSection">
+            <label>Add this bill to person (loan)</label>
+            <select id="assignPerson">
+              <option value="">— Select person —</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="clearCart">Clear & New Bill</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="notebook" class="panel">
+      <div class="notebook">
+        <h2>Persons — Loan / Credit (CRUD)</h2>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Create, edit, delete customers. Add bills and payments.</p>
+        <form class="add-person-form" id="addPersonForm">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="personName" placeholder="Customer name" required />
+          </div>
+          <div class="form-group">
+            <label>Number</label>
+            <input type="tel" id="personNumber" placeholder="Phone number" />
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary">Add Person</button>
+          </div>
+        </form>
+        <div class="person-list" id="personList"></div>
+      </div>
+    </div>
+
+    <div id="report" class="panel">
+      <div class="report-box">
+        <h2>Monthly Sales Report</h2>
+        <div class="report-filters">
+          <label>Month</label>
+          <select id="reportMonth"></select>
+          <label>Year</label>
+          <select id="reportYear"></select>
+        </div>
+        <div class="report-summary" id="reportSummary"></div>
+        <div class="report-table-wrap">
+          <table class="report-table" id="reportTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Total (Rs.)</th>
+                <th>Type</th>
+                <th>Customer</th>
+              </tr>
+            </thead>
+            <tbody id="reportBody"></tbody>
+          </table>
+        </div>
+        <p id="reportNone" class="report-none" style="display:none;">No sales for this month.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3>Edit Person</h3>
+      <input type="hidden" id="editId" />
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="editName" placeholder="Customer name" />
+      </div>
+      <div class="form-group">
+        <label>Number</label>
+        <input type="tel" id="editNumber" placeholder="Phone number" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="saveEdit">Save</button>
+        <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MENU = [
+      { name: 'Parotta', price: 50, img: 'https://images.unsplash.com/photo-1596797038530-2c329229d623?w=300&h=200&fit=crop' },
+      { name: 'Plain tea', price: 30, img: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=200&fit=crop' },
+      { name: 'Tea', price: 130, img: 'https://images.unsplash.com/photo-1556679343-c7306c7916f2?w=300&h=200&fit=crop' },
+      { name: 'Beef roti', price: 100, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+      { name: 'Vegetable roti', price: 50, img: 'https://images.unsplash.com/photo-1547592168-7a8418c4c477?w=300&h=200&fit=crop' },
+      { name: 'Short eat', price: 50, img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=200&fit=crop' },
+      { name: 'Dhal curry', price: 50, img: 'https://images.unsplash.com/photo-1546548970-3d2f1a252d6b?w=300&h=200&fit=crop' },
+      { name: 'Beef curry', price: 150, img: 'https://images.unsplash.com/photo-1603360946369-dcdf2c4e8782?w=300&h=200&fit=crop' },
+      { name: 'Chicken curry', price: 130, img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=200&fit=crop' },
+      { name: 'Samosa', price: 50, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=200&fit=crop' },
+      { name: 'Fried rice', price: 800, img: 'https://images.unsplash.com/photo-1603133874142-22b3a4a97a75?w=300&h=200&fit=crop' },
+      { name: 'Kothu', price: 800, img: 'https://images.unsplash.com/photo-1598043194777-27ec067b5342?w=300&h=200&fit=crop' },
+    ];
+
+    const CURRENCY = 'Rs.';
+
+    let cart = [];
+    let persons = JSON.parse(localStorage.getItem('paddyfood_persons') || '[]');
+    let sales = JSON.parse(localStorage.getItem('paddyfood_sales') || '[]');
+
+    function fmt(n) {
+      return CURRENCY + ' ' + (n || 0);
+    }
+
+    function renderMenu() {
+      const grid = document.getElementById('menuGrid');
+      grid.innerHTML = MENU.map((item) => `
+        <div class="menu-card" data-name="${item.name}" data-price="${item.price}">
+          <div class="img-wrap">
+            <img src="${item.img}" alt="${item.name}" loading="lazy" />
+          </div>
+          <div class="name">${item.name}</div>
+          <div class="price">${fmt(item.price)}</div>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.menu-card').forEach((el) => {
+        el.addEventListener('click', () => {
+          const name = el.dataset.name;
+          const price = +el.dataset.price;
+          const existing = cart.find((i) => i.name === name);
+          if (existing) existing.qty++;
+          else cart.push({ name, price, qty: 1 });
+          renderCart();
+        });
+      });
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cartItems');
+      const totalEl = document.getElementById('totalAmount');
+      const paidEl = document.getElementById('amountPaid');
+      const balanceEl = document.getElementById('balanceRow');
+
+      if (!cart.length) {
+        container.innerHTML = '<div class="cart-empty">Click items to add.</div>';
+        totalEl.textContent = fmt(0);
+        balanceEl.textContent = 'Balance: ' + fmt(0);
+        balanceEl.className = 'balance-row';
+        paidEl.value = '';
+        updateAssignPerson();
+        return;
+      }
+
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      container.innerHTML = cart.map((i) => `
+        <div class="cart-item">
+          <span><span class="qty">${i.qty}×</span> ${i.name}</span>
+          <span>${fmt(i.price * i.qty)}</span>
+        </div>
+      `).join('');
+
+      totalEl.textContent = fmt(total);
+      updateBalance(total, balanceEl, paidEl);
+      updateAssignPerson();
+    }
+
+    function updateBalance(total, balanceEl, paidEl) {
+      const paid = +paidEl.value || 0;
+      const diff = paid - total;
+      if (diff < 0) {
+        balanceEl.textContent = 'Balance to pay: ' + fmt(Math.abs(diff));
+        balanceEl.className = 'balance-row owe';
+      } else if (diff > 0) {
+        balanceEl.textContent = 'Return: ' + fmt(diff);
+        balanceEl.className = 'balance-row return';
+      } else {
+        balanceEl.textContent = 'Balance: ' + fmt(0);
+        balanceEl.className = 'balance-row';
+      }
+    }
+
+    function updateAssignPerson() {
+      const sel = document.getElementById('assignPerson');
+      sel.innerHTML = '<option value="">— Select person —</option>' +
+        persons.map((p) => `<option value="${p.id}">${p.name}${p.number ? ' (' + p.number + ')' : ''}</option>`).join('');
+    }
+
+    document.getElementById('amountPaid').addEventListener('input', () => {
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      updateBalance(total, document.getElementById('balanceRow'), document.getElementById('amountPaid'));
+    });
+
+    document.getElementById('clearCart').addEventListener('click', () => {
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const assignId = document.getElementById('assignPerson').value;
+      const now = new Date();
+      const dateKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+
+      if (total > 0) {
+        sales.push({
+          id: 's' + Date.now(),
+          date: dateKey,
+          datetime: now.toISOString(),
+          total: total,
+          type: assignId ? 'credit' : 'cash',
+          personId: assignId || null,
+          personName: assignId ? (persons.find((x) => x.id === assignId) || {}).name : null,
+        });
+        localStorage.setItem('paddyfood_sales', JSON.stringify(sales));
+
+        if (assignId) {
+          const p = persons.find((x) => x.id === assignId);
+          if (p) {
+            p.balance = (p.balance || 0) + total;
+            p.entries = p.entries || [];
+            p.entries.push({ type: 'bill', amount: total, at: now.toISOString() });
+            savePersons();
+          }
+        }
+      }
+
+      cart = [];
+      renderCart();
+      renderPersons();
+      if (document.getElementById('report').classList.contains('active')) renderReport();
+    });
+
+    function savePersons() {
+      localStorage.setItem('paddyfood_persons', JSON.stringify(persons));
+    }
+
+    function openEditModal(p) {
+      document.getElementById('editId').value = p.id;
+      document.getElementById('editName').value = p.name;
+      document.getElementById('editNumber').value = p.number || '';
+      document.getElementById('editModal').classList.add('open');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.remove('open');
+    }
+
+    document.getElementById('saveEdit').addEventListener('click', () => {
+      const id = document.getElementById('editId').value;
+      const name = document.getElementById('editName').value.trim();
+      const number = document.getElementById('editNumber').value.trim();
+      const p = persons.find((x) => x.id === id);
+      if (p && name) {
+        p.name = name;
+        p.number = number || null;
+        savePersons();
+        renderPersons();
+        updateAssignPerson();
+      }
+      closeEditModal();
+    });
+
+    document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
+    document.getElementById('editModal').addEventListener('click', (e) => {
+      if (e.target.id === 'editModal') closeEditModal();
+    });
+
+    function deletePerson(id) {
+      if (!confirm('Delete this person? Their ledger will be removed.')) return;
+      persons = persons.filter((x) => x.id !== id);
+      savePersons();
+      renderPersons();
+      updateAssignPerson();
+    }
+
+    function renderPersons() {
+      const list = document.getElementById('personList');
+      if (!persons.length) {
+        list.innerHTML = '<div class="no-persons">No persons added. Use the form above to add.</div>';
+        updateAssignPerson();
+        return;
+      }
+
+      list.innerHTML = persons.map((p) => {
+        const balance = p.balance || 0;
+        const entries = (p.entries || []).slice(-8).reverse();
+        return `
+          <div class="person-item" data-id="${p.id}">
+            <div class="person-header">
+              <div>
+                <span class="person-name">${p.name}</span>
+                ${p.number ? `<span class="person-number"> · ${p.number}</span>` : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span class="person-balance ${balance === 0 ? 'zero' : ''}">${fmt(balance)}</span>
+                <button type="button" class="btn btn-small btn-edit edit-person-btn" data-id="${p.id}">Edit</button>
+                <button type="button" class="btn btn-small btn-delete delete-person-btn" data-id="${p.id}">Delete</button>
+              </div>
+            </div>
+            <div class="person-actions">
+              <input type="number" placeholder="Add bill Rs." min="1" class="add-bill-input" data-id="${p.id}" />
+              <button type="button" class="btn btn-small btn-add-bill add-bill-btn" data-id="${p.id}">Add</button>
+              <input type="number" placeholder="Payment Rs." min="1" class="pay-input" data-id="${p.id}" />
+              <button type="button" class="btn btn-small btn-pay pay-btn" data-id="${p.id}">Pay</button>
+            </div>
+            ${entries.length ? `
+              <div class="ledger-entries">
+                ${entries.map((e) => `
+                  <div class="ledger-entry">
+                    <span>${e.type === 'bill' ? 'Bill +' + fmt(e.amount) : 'Payment -' + fmt(e.amount)}</span>
+                    <span>${new Date(e.at).toLocaleString()}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      list.querySelectorAll('.edit-person-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = persons.find((x) => x.id === btn.dataset.id);
+          if (p) openEditModal(p);
+        });
+      });
+      list.querySelectorAll('.delete-person-btn').forEach((btn) => {
+        btn.addEventListener('click', () => deletePerson(btn.dataset.id));
+      });
+      list.querySelectorAll('.add-bill-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const input = list.querySelector('.add-bill-input[data-id="' + id + '"]');
+          const amt = +input.value;
+          if (amt < 1) return;
+          const p = persons.find((x) => x.id === id);
+          if (p) {
+            p.balance = (p.balance || 0) + amt;
+            p.entries = p.entries || [];
+            p.entries.push({ type: 'bill', amount: amt, at: new Date().toISOString() });
+            savePersons();
+            input.value = '';
+            renderPersons();
+          }
+        });
+      });
+      list.querySelectorAll('.pay-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const input = list.querySelector('.pay-input[data-id="' + id + '"]');
+          const amt = +input.value;
+          if (amt < 1) return;
+          const p = persons.find((x) => x.id === id);
+          if (p) {
+            p.balance = Math.max(0, (p.balance || 0) - amt);
+            p.entries = p.entries || [];
+            p.entries.push({ type: 'payment', amount: amt, at: new Date().toISOString() });
+            savePersons();
+            input.value = '';
+            renderPersons();
+          }
+        });
+      });
+
+      updateAssignPerson();
+    }
+
+    document.getElementById('addPersonForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('personName').value.trim();
+      const number = document.getElementById('personNumber').value.trim();
+      if (!name) return;
+      persons.push({
+        id: 'p' + Date.now(),
+        name,
+        number: number || null,
+        balance: 0,
+        entries: [],
+      });
+      savePersons();
+      document.getElementById('personName').value = '';
+      document.getElementById('personNumber').value = '';
+      renderPersons();
+    });
+
+    function fillReportFilters() {
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const now = new Date();
+      const monthSel = document.getElementById('reportMonth');
+      const yearSel = document.getElementById('reportYear');
+      const years = [];
+      sales.forEach((s) => {
+        const y = parseInt(s.date.slice(0, 4), 10);
+        if (!years.includes(y)) years.push(y);
+      });
+      if (!years.length) years.push(now.getFullYear());
+      years.sort((a, b) => b - a);
+      if (!years.includes(now.getFullYear())) years.unshift(now.getFullYear());
+
+      monthSel.innerHTML = months.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+      yearSel.innerHTML = years.map((y) => `<option value="${y}">${y}</option>`).join('');
+      monthSel.value = String(now.getMonth() + 1);
+      yearSel.value = String(now.getFullYear());
+    }
+
+    function renderReport() {
+      const month = parseInt(document.getElementById('reportMonth').value, 10);
+      const year = parseInt(document.getElementById('reportYear').value, 10);
+      const prefix = year + '-' + String(month).padStart(2, '0');
+      const monthSales = sales.filter((s) => s.date.startsWith(prefix));
+
+      const total = monthSales.reduce((acc, s) => acc + s.total, 0);
+      const cash = monthSales.filter((s) => s.type === 'cash').reduce((acc, s) => acc + s.total, 0);
+      const credit = monthSales.filter((s) => s.type === 'credit').reduce((acc, s) => acc + s.total, 0);
+
+      document.getElementById('reportSummary').innerHTML = `
+        <div class="report-card">
+          <div class="label">Total Sales</div>
+          <div class="value">${fmt(total)}</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Cash</div>
+          <div class="value">${fmt(cash)}</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Credit</div>
+          <div class="value">${fmt(credit)}</div>
+        </div>
+        <div class="report-card">
+          <div class="label">Transactions</div>
+          <div class="value">${monthSales.length}</div>
+        </div>
+      `;
+
+      const tbody = document.getElementById('reportBody');
+      const noneEl = document.getElementById('reportNone');
+      if (!monthSales.length) {
+        tbody.innerHTML = '';
+        noneEl.style.display = 'block';
+        return;
+      }
+      noneEl.style.display = 'none';
+      const sorted = monthSales.slice().sort((a, b) => (a.datetime || a.date).localeCompare(b.datetime || b.date));
+      tbody.innerHTML = sorted.map((s) => `
+        <tr>
+          <td>${s.date}</td>
+          <td>${fmt(s.total)}</td>
+          <td>${s.type === 'credit' ? 'Credit' : 'Cash'}</td>
+          <td>${s.personName || '—'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('reportMonth').addEventListener('change', renderReport);
+    document.getElementById('reportYear').addEventListener('change', renderReport);
+
+    document.querySelectorAll('.tab').forEach((t) => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((x) => x.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach((x) => x.classList.remove('active'));
+        t.classList.add('active');
+        const panel = document.getElementById(t.dataset.panel);
+        panel.classList.add('active');
+        if (panel.id === 'report') {
+          fillReportFilters();
+          renderReport();
+        }
+      });
+    });
+
+    renderMenu();
+    renderCart();
+    renderPersons();
+  </script>
+</body>
+</html>
