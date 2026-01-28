@@ -132,10 +132,46 @@
       }
     }
 
+    @media (max-width: 480px) {
+      body { padding: 0.5rem; }
+      header { padding: 1rem; margin-bottom: 1rem; }
+      .logo { font-size: 1.75rem; }
+      .tagline { font-size: 0.8rem; }
+      .tabs { gap: 0.35rem; }
+      .tab { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+      .owner-profile { padding: 0.75rem; gap: 0.75rem; }
+      .owner-photo { width: 60px; height: 60px; }
+      .owner-name { font-size: 0.95rem; }
+      .owner-title, .owner-address { font-size: 0.8rem; }
+      .bill-box { padding: 1rem; }
+      .bill-box h3 { font-size: 1.1rem; }
+      .notebook { padding: 1rem; }
+      .notebook h2 { font-size: 1.15rem; }
+      .report-box { padding: 1rem; }
+      .report-box h2 { font-size: 1.15rem; }
+      .btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+      .total-row { font-size: 1rem; }
+      .balance-row { font-size: 0.95rem; padding: 0.6rem; }
+    }
+
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .menu-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+      }
     }
 
     .menu-card {
@@ -151,6 +187,25 @@
     .menu-card:hover {
       border-color: var(--paddy-light);
       box-shadow: 0 4px 12px var(--shadow);
+    }
+    .menu-card.added {
+      border-color: var(--paddy-light);
+      box-shadow: 0 0 0 3px rgba(107,142,35,0.4);
+    }
+
+    .menu-card:active {
+      transform: scale(0.97);
+    }
+
+    @media (hover: none) {
+      .menu-card:hover {
+        border-color: #e0dcc8;
+        box-shadow: none;
+      }
+      .menu-card:active {
+        border-color: var(--paddy-light);
+        box-shadow: 0 4px 12px var(--shadow);
+      }
     }
 
     .menu-card .img-wrap {
@@ -178,6 +233,12 @@
       font-weight: 700;
       padding: 0.1rem 0.5rem 0.5rem;
       font-size: 0.95rem;
+    }
+
+    @media (max-width: 480px) {
+      .menu-card .img-wrap { height: 70px; }
+      .menu-card .name { font-size: 0.8rem; padding: 0.3rem 0.4rem 0.1rem; }
+      .menu-card .price { font-size: 0.85rem; padding: 0.1rem 0.4rem 0.4rem; }
     }
 
     .bill-box {
@@ -225,6 +286,11 @@
       color: #888;
       font-size: 0.9rem;
       padding: 0.5rem 0;
+    }
+
+    @media (max-width: 480px) {
+      .cart-items { max-height: 150px; }
+      .cart-item { font-size: 0.85rem; padding: 0.35rem 0; }
     }
 
     .total-row {
@@ -395,6 +461,17 @@
       border-radius: 6px;
       font-size: 0.9rem;
     }
+
+    @media (max-width: 480px) {
+      .person-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .person-name { font-size: 0.95rem; }
+      .person-balance { font-size: 1rem; }
+      .person-actions { gap: 0.4rem; }
+      .person-actions input { width: 75px; font-size: 0.8rem; padding: 0.35rem 0.4rem; }
+      .btn-small { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+      .ledger-entries { font-size: 0.75rem; max-height: 100px; }
+      .add-person-form { gap: 0.5rem; }
+    }
     .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
     .btn-add-bill { background: var(--paddy-green); color: white; }
     .btn-pay { background: var(--golden); color: var(--ink); }
@@ -454,6 +531,13 @@
       margin-top: 1rem;
     }
     .modal-actions .btn { margin-top: 0; width: auto; }
+
+    @media (max-width: 480px) {
+      .modal { padding: 1rem; max-width: 95%; }
+      .modal h3 { font-size: 1.1rem; }
+      .modal .form-group { margin-bottom: 0.75rem; }
+      .modal-actions { flex-wrap: wrap; }
+    }
 
     /* Monthly Sales Report */
     .report-box {
@@ -524,6 +608,94 @@
     }
     .report-table tr:hover { background: #f5f0e1; }
     .report-none { text-align: center; color: #888; padding: 2rem; }
+
+    @media (max-width: 480px) {
+      .report-filters { gap: 0.5rem; }
+      .report-filters label { font-size: 0.8rem; }
+      .report-filters select { padding: 0.4rem 0.5rem; font-size: 0.9rem; }
+      .report-summary { gap: 0.5rem; }
+      .report-card { padding: 0.75rem; }
+      .report-card .label { font-size: 0.75rem; }
+      .report-card .value { font-size: 1.05rem; }
+      .report-table { font-size: 0.8rem; }
+      .report-table th, .report-table td { padding: 0.4rem 0.5rem; }
+    }
+
+    /* Owner profile */
+    .owner-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+      border: 1px solid #e0dcc8;
+    }
+    .owner-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--paddy-green);
+    }
+    .owner-info { text-align: left; }
+    .owner-name { font-weight: 700; color: var(--paddy-green); font-size: 1.05rem; }
+    .owner-title { font-size: 0.9rem; color: #555; margin-top: 0.2rem; }
+    .owner-address { font-size: 0.85rem; color: #666; margin-top: 0.25rem; }
+
+    /* Print Bill */
+    .btn-print {
+      background: var(--golden);
+      color: var(--ink);
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .btn-print:hover { background: #b8921f; }
+    .btn-print:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    @media print {
+      body::before, body::after, .container, .modal-overlay, .no-print { display: none !important; }
+      body { background: #fff; }
+      #billPrintWrap {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        background: #fff;
+        padding: 1rem;
+        font-size: 14px;
+        max-width: 100%;
+      }
+      #billPrintWrap * { visibility: visible; }
+    }
+    .print-bill-wrap {
+      display: none;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 1rem;
+      font-family: 'Outfit', sans-serif;
+    }
+    .print-bill-wrap .paddy-logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: #2d5016; text-align: center; }
+    .print-bill-wrap .print-owner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed #999;
+    }
+    .print-bill-wrap .print-owner img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+    .print-bill-wrap .print-owner .name { font-weight: 700; font-size: 0.95rem; }
+    .print-bill-wrap .print-owner .address { font-size: 0.8rem; color: #555; margin-top: 0.2rem; }
+    .print-bill-wrap .print-items { margin: 0.5rem 0; border-bottom: 1px dashed #999; padding-bottom: 0.5rem; }
+    .print-bill-wrap .print-row { display: flex; justify-content: space-between; padding: 0.2rem 0; font-size: 0.9rem; }
+    .print-bill-wrap .print-total { font-weight: 700; margin-top: 0.5rem; }
+    .print-bill-wrap .print-balance { margin-top: 0.5rem; font-weight: 700; }
+    .print-bill-wrap .print-date { font-size: 0.8rem; color: #666; margin-top: 0.75rem; text-align: center; }
   </style>
 </head>
 <body>
@@ -531,6 +703,14 @@
     <header>
       <h1 class="logo">PADDYFOOD</h1>
       <p class="tagline">Surrounded by paddy field — Parotta & more</p>
+      <div class="owner-profile no-print">
+        <img src="assets/owner.png" alt="Owner" class="owner-photo" />
+        <div class="owner-info">
+          <div class="owner-name">MB. UBAITHULLAH (CHEF)</div>
+          <div class="owner-title">Owner of PADDYFOOD</div>
+          <div class="owner-address">Lahugala Road, Pottuvil</div>
+        </div>
+      </div>
     </header>
 
     <div class="tabs">
@@ -563,6 +743,7 @@
               <option value="">— Select person —</option>
             </select>
           </div>
+          <button class="btn btn-primary btn-print no-print" id="printBill" type="button" disabled>Print Bill</button>
           <button class="btn btn-primary" id="clearCart">Clear & New Bill</button>
         </div>
       </div>
@@ -617,6 +798,24 @@
     </div>
   </div>
 
+  <div id="billPrintWrap" class="print-bill-wrap print-only" aria-hidden="true" style="display:none;">
+    <div class="paddy-logo">PADDYFOOD</div>
+    <div class="print-owner">
+      <img src="assets/owner.png" alt="Owner" />
+      <div>
+        <div class="name">MB. UBAITHULLAH (CHEF)</div>
+        <div class="owner-title">Owner of PADDYFOOD</div>
+        <div class="address">Lahugala Road, Pottuvil</div>
+      </div>
+    </div>
+    <div class="print-items" id="printItems"></div>
+    <div class="print-row print-total" id="printTotal"></div>
+    <div class="print-row" id="printPaid"></div>
+    <div class="print-row print-balance" id="printBalance"></div>
+    <div class="print-date" id="printDate"></div>
+    <div class="print-date" style="margin-top:0.5rem;font-weight:600;">Thank you!</div>
+  </div>
+
   <div class="modal-overlay" id="editModal">
     <div class="modal">
       <h3>Edit Person</h3>
@@ -638,18 +837,18 @@
 
   <script>
     const MENU = [
-      { name: 'Parotta', price: 50, img: 'https://images.unsplash.com/photo-1596797038530-2c329229d623?w=300&h=200&fit=crop' },
-      { name: 'Plain tea', price: 30, img: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=200&fit=crop' },
-      { name: 'Tea', price: 130, img: 'https://images.unsplash.com/photo-1556679343-c7306c7916f2?w=300&h=200&fit=crop' },
-      { name: 'Beef roti', price: 100, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
-      { name: 'Vegetable roti', price: 50, img: 'https://images.unsplash.com/photo-1547592168-7a8418c4c477?w=300&h=200&fit=crop' },
-      { name: 'Short eat', price: 50, img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&h=200&fit=crop' },
-      { name: 'Dhal curry', price: 50, img: 'https://images.unsplash.com/photo-1546548970-3d2f1a252d6b?w=300&h=200&fit=crop' },
-      { name: 'Beef curry', price: 150, img: 'https://images.unsplash.com/photo-1603360946369-dcdf2c4e8782?w=300&h=200&fit=crop' },
-      { name: 'Chicken curry', price: 130, img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=200&fit=crop' },
+      { name: 'Parotta', price: 50, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+      { name: 'Plain tea', price: 30, img: 'https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=300&h=200&fit=crop' },
+      { name: 'Tea', price: 130, img: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=200&fit=crop' },
+      { name: 'Beef roti', price: 100, img: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=300&h=200&fit=crop' },
+      { name: 'Vegetable roti', price: 50, img: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=300&h=200&fit=crop' },
+      { name: 'Short eat', price: 50, img: 'https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=300&h=200&fit=crop' },
+      { name: 'Dhal curry', price: 50, img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=200&fit=crop' },
+      { name: 'Beef curry', price: 150, img: 'https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=300&h=200&fit=crop' },
+      { name: 'Chicken curry', price: 130, img: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&h=200&fit=crop' },
       { name: 'Samosa', price: 50, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=200&fit=crop' },
       { name: 'Fried rice', price: 800, img: 'https://images.unsplash.com/photo-1603133874142-22b3a4a97a75?w=300&h=200&fit=crop' },
-      { name: 'Kothu', price: 800, img: 'https://images.unsplash.com/photo-1598043194777-27ec067b5342?w=300&h=200&fit=crop' },
+      { name: 'Kothu', price: 800, img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=300&h=200&fit=crop' },
     ];
 
     const CURRENCY = 'Rs.';
@@ -681,6 +880,8 @@
           const existing = cart.find((i) => i.name === name);
           if (existing) existing.qty++;
           else cart.push({ name, price, qty: 1 });
+          el.classList.add('added');
+          setTimeout(function () { el.classList.remove('added'); }, 300);
           renderCart();
         });
       });
@@ -693,12 +894,13 @@
       const balanceEl = document.getElementById('balanceRow');
 
       if (!cart.length) {
-        container.innerHTML = '<div class="cart-empty">Click items to add.</div>';
+        container.innerHTML = '<div class="cart-empty">Click items to add to cart.</div>';
         totalEl.textContent = fmt(0);
         balanceEl.textContent = 'Balance: ' + fmt(0);
         balanceEl.className = 'balance-row';
         paidEl.value = '';
         updateAssignPerson();
+        setPrintBillDisabled(true);
         return;
       }
 
@@ -713,6 +915,13 @@
       totalEl.textContent = fmt(total);
       updateBalance(total, balanceEl, paidEl);
       updateAssignPerson();
+      const printBtn = document.getElementById('printBill');
+      if (printBtn) printBtn.disabled = false;
+    }
+
+    function setPrintBillDisabled(disabled) {
+      const btn = document.getElementById('printBill');
+      if (btn) btn.disabled = disabled;
     }
 
     function updateBalance(total, balanceEl, paidEl) {
@@ -739,6 +948,21 @@
     document.getElementById('amountPaid').addEventListener('input', () => {
       const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
       updateBalance(total, document.getElementById('balanceRow'), document.getElementById('amountPaid'));
+    });
+
+    document.getElementById('printBill').addEventListener('click', () => {
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const paid = +document.getElementById('amountPaid').value || 0;
+      const balance = paid - total;
+      document.getElementById('printItems').innerHTML = cart.length
+        ? cart.map((i) => `<div class="print-row">${i.qty}× ${i.name} — ${fmt(i.price * i.qty)}</div>`).join('')
+        : '<div class="print-row">No items</div>';
+      document.getElementById('printTotal').textContent = 'Total: ' + fmt(total);
+      document.getElementById('printPaid').textContent = 'Amount paid: ' + fmt(paid);
+      document.getElementById('printBalance').textContent =
+        balance < 0 ? 'Balance to pay: ' + fmt(Math.abs(balance)) : balance > 0 ? 'Return: ' + fmt(balance) : 'Balance: ' + fmt(0);
+      document.getElementById('printDate').textContent = new Date().toLocaleString();
+      window.print();
     });
 
     document.getElementById('clearCart').addEventListener('click', () => {
@@ -1016,6 +1240,7 @@
     renderMenu();
     renderCart();
     renderPersons();
+    setPrintBillDisabled(!cart.length);
   </script>
 </body>
 </html>
